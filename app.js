@@ -1,12 +1,17 @@
 const express = require('express')
-const router = require('./router')
-const config = require('./config')
-const morgan = require('morgan')
+// const router = require('./router')
 const app = express()
+const morgan = require('morgan')
+
+const config = require('./api/config')
+
+const usersRoute = require('./api/routes/usersRoute')
 
 app.use(morgan('dev'))
 
 app.set('port', process.env.PORT)
+
+app.use(express.json())
 
 //CORS
 app.use((req, res, next) => {
@@ -16,8 +21,8 @@ app.use((req, res, next) => {
    next()
 })
 
-//Ruta base para manejas las demas
-app.use('/api', router)
+//Routes
+app.use('/api/users', usersRoute)
 
 //Manejo de errores
 app.use((req, res, next) => {
