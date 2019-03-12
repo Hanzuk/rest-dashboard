@@ -1,0 +1,28 @@
+{
+  "name": "rest-dashboard",
+  "version": "1.0.0",
+  "description": "A Node.js RESTful API Project For A Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hanzuk/rest-dashboard.git"
+  },
+  "author": "Roberto Duarte <robert0d3@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Hanzuk/rest-dashboard/issues"
+  },
+  "homepage": "https://github.com/Hanzuk/rest-dashboard#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "mongoose": "^5.4.19",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
