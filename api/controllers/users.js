@@ -24,7 +24,7 @@ const apiResponse = (req, res, err, data) => {
 }
 
 exports.get_total_users = async(req, res) => {
-
+   //Todos los meses del año distinto al actual
    if(req.params.year != moment().year() && req.params.month === 'all') {
       await User.aggregate([
          {
@@ -56,7 +56,7 @@ exports.get_total_users = async(req, res) => {
          }, { '$sort': { 'date': 1 } }
       ]).exec((err, data) => apiResponse(req, res, err, data))
    }
-
+   //Mes específico del año distinto al actual
    if(req.params.year != moment().year() && req.params.month !== 'all') {
       if(req.params.month >= 1 && req.params.month <= 12) {
          await User.aggregate([
@@ -89,12 +89,12 @@ exports.get_total_users = async(req, res) => {
             }
          ]).exec((err, data) => apiResponse(req, res, err, data))
       } else {
-         res.status(400).send({
+         res.status(404).send({
             error: 'Month not found'
          })
       }
    }
-
+   //Todos los meses del año actual
    if(req.params.year == moment().year() && req.params.month === 'all') {
       await User.aggregate([
          {
@@ -126,7 +126,7 @@ exports.get_total_users = async(req, res) => {
          }, { '$sort': { 'date': 1 } }
       ]).exec((err, data) => apiResponse(req, res, err, data))
    }
-
+   //Mes específico del año actual
    if(req.params.year == moment().year() && req.params.month !== 'all') {
       if(req.params.month >= 1 && req.params.month <= 12) {
          await User.aggregate([
@@ -159,7 +159,7 @@ exports.get_total_users = async(req, res) => {
             }
          ]).exec((err, data) => apiResponse(req, res, err, data))
       } else {
-         res.status(400).send({
+         res.status(404).send({
             error: 'Month not found'
          })
       }
