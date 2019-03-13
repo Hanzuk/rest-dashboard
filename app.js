@@ -7,6 +7,7 @@ const config = require('./api/config')
 
 const usersRouter = require('./api/routes/usersRoute')
 const pollsRouter = require('./api/routes/pollsRouter')
+const incomesRouter = require('./api/routes/incomesRouters')
 
 app.use(morgan('dev'))
 
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 //Routes
 app.use('/api/users', usersRouter)
 app.use('/api/polls', pollsRouter)
+app.use('/api/incomes', incomesRouter)
 
 //Manejo de errores
 app.use((req, res, next) => {
