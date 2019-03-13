@@ -30,43 +30,69 @@ exports.get_total_users = async(req, res) => {
          {
             '$match': {
                'date_joined': {
-               '$gte': new Date(moment.utc().set('year', req.params.year).startOf('year')),
-               '$lte': new Date(moment.utc().set('year', req.params.year).endOf('year'))
+                  '$gte': new Date(moment.utc().set('year', req.params.year).startOf('year')),
+                  '$lte': new Date(moment.utc().set('year', req.params.year).endOf('year'))
                }
             }
          }, {
             '$group': {
                '_id': {
-                  'month': {
-                     '$month': '$date_joined'
-                  }
+                  'year': { '$year': '$date_joined' },
+                  'month': { '$month': '$date_joined' }
                }, 
                'total': { '$sum': 1 }
             }
-         }, { '$sort': { '_id.month': 1 } }
+         }, {
+            '$project': {
+               '_id': 0, 
+               'date': {
+                  '$dateFromParts': {
+                     'year': '$_id.year', 
+                     'month': '$_id.month'
+                  }
+               }, 
+               'total': '$total'
+            }
+         }, { '$sort': { 'date': 1 } }
       ]).exec((err, data) => apiResponse(req, res, err, data))
    }
 
    if(req.params.year != moment().year() && req.params.month !== 'all') {
-      await User.aggregate([
-         {
-            '$match': {
-               'date_joined': {
-               '$gte': new Date(moment.utc().set('year', req.params.year).set('month', req.params.month).startOf('month')),
-               '$lte': new Date(moment.utc().set('year', req.params.year).set('month', req.params.month).endOf('month'))
+      if(req.params.month >= 1 && req.params.month <= 12) {
+         await User.aggregate([
+            {
+               '$match': {
+                  'date_joined': {
+                     '$gte': new Date(moment.utc().set('year', req.params.year).set('month', req.params.month - 1).startOf('month')),
+                     '$lte': new Date(moment.utc().set('year', req.params.year).set('month', req.params.month - 1).endOf('month'))
+                  }
+               }
+            }, {
+               '$group': {
+                  '_id': {
+                     'year': { '$year': '$date_joined' },
+                     'month': { '$month': '$date_joined' }
+                  }, 
+                  'total': { '$sum': 1 }
+               }
+            }, {
+               '$project': {
+                  '_id': 0, 
+                  'date': {
+                     '$dateFromParts': {
+                        'year': '$_id.year', 
+                        'month': '$_id.month'
+                     }
+                  }, 
+                  'total': '$total'
                }
             }
-         }, {
-            '$group': {
-               '_id': {
-                  'month': {
-                     '$month': '$date_joined'
-                  }
-               }, 
-               'total': { '$sum': 1 }
-            }
-         }, { '$sort': { '_id.month': 1 } }
-      ]).exec((err, data) => apiResponse(req, res, err, data))
+         ]).exec((err, data) => apiResponse(req, res, err, data))
+      } else {
+         res.status(400).send({
+            error: 'Month not found'
+         })
+      }
    }
 
    if(req.params.year == moment().year() && req.params.month === 'all') {
@@ -74,43 +100,69 @@ exports.get_total_users = async(req, res) => {
          {
             '$match': {
                'date_joined': {
-               '$gte': new Date(moment.utc().startOf('year')),
-               '$lte': new Date(moment.utc().endOf('month'))
+                  '$gte': new Date(moment.utc().startOf('year')),
+                  '$lte': new Date(moment.utc().endOf('month'))
                }
             }
          }, {
             '$group': {
                '_id': {
-                  'month': {
-                     '$month': '$date_joined'
-                  }
+                  'year': { '$year': '$date_joined' },
+                  'month': { '$month': '$date_joined' }
                }, 
                'total': { '$sum': 1 }
             }
-         }, { '$sort': { '_id.month': 1 } }
+         }, {
+            '$project': {
+               '_id': 0, 
+               'date': {
+                  '$dateFromParts': {
+                     'year': '$_id.year', 
+                     'month': '$_id.month'
+                  }
+               }, 
+               'total': '$total'
+            }
+         }, { '$sort': { 'date': 1 } }
       ]).exec((err, data) => apiResponse(req, res, err, data))
    }
 
    if(req.params.year == moment().year() && req.params.month !== 'all') {
-      await User.aggregate([
-         {
-            '$match': {
-               'date_joined': {
-               '$gte': new Date(moment.utc().set('month', req.params.month).startOf('month')),
-               '$lte': new Date(moment.utc().set('month', req.params.month).endOf('month'))
+      if(req.params.month >= 1 && req.params.month <= 12) {
+         await User.aggregate([
+            {
+               '$match': {
+                  'date_joined': {
+                     '$gte': new Date(moment.utc().set('month', req.params.month - 1).startOf('month')),
+                     '$lte': new Date(moment.utc().set('month', req.params.month - 1).endOf('month'))
+                  }
+               }
+            }, {
+               '$group': {
+                  '_id': {
+                     'year': { '$year': '$date_joined' },
+                     'month': { '$month': '$date_joined' }
+                  }, 
+                  'total': { '$sum': 1 }
+               }
+            }, {
+               '$project': {
+                  '_id': 0, 
+                  'date': {
+                     '$dateFromParts': {
+                        'year': '$_id.year', 
+                        'month': '$_id.month'
+                     }
+                  }, 
+                  'total': '$total'
                }
             }
-         }, {
-            '$group': {
-               '_id': {
-                  'month': {
-                     '$month': '$date_joined'
-                  }
-               }, 
-               'total': { '$sum': 1 }
-            }
-         }, { '$sort': { '_id.month': 1 } }
-      ]).exec((err, data) => apiResponse(req, res, err, data))
+         ]).exec((err, data) => apiResponse(req, res, err, data))
+      } else {
+         res.status(400).send({
+            error: 'Month not found'
+         })
+      }
    }
 
 }
