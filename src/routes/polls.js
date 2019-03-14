@@ -1,3 +1,6 @@
+const express = require('express')
+const router = express.Router()
+
 const Poll = require('../models/poll')
 const moment = require('moment')
 
@@ -23,8 +26,7 @@ const apiResponse = (req, res, err, data) => {
    }
 }
 
-//Poll general de un mes específico
-exports.get_general_poll = async(req, res) => {
+router.get('/:year/:month', async(req, res) => {
    if(req.params.month >= 1 && req.params.month <= 12) {
       await Poll.aggregate([
          {
@@ -72,10 +74,9 @@ exports.get_general_poll = async(req, res) => {
          error: 'Bad Request'
       })
    }
-}
+})
 
-//Poll específico del mes acerca de "equipment", "services" o "staff"
-exports.get_specific_poll = async(req, res) => {
+router.get('/:year/:month/:about', async(req, res) => {
    if(req.params.month >= 1 && req.params.month <= 12) {
       await Poll.aggregate([
          {
@@ -126,4 +127,6 @@ exports.get_specific_poll = async(req, res) => {
          error: 'Bad Request'
       })
    }
-}
+})
+
+module.exports = router

@@ -1,4 +1,7 @@
-const User = require('../models/user')
+const express = require('express')
+const router = express.Router()
+
+const User = require('../models/User')
 const moment = require('moment')
 
 const apiResponse = (req, res, err, data) => {
@@ -23,7 +26,7 @@ const apiResponse = (req, res, err, data) => {
    }
 }
 
-exports.get_total_users = async(req, res) => {
+router.get('/:year/:month', async(req, res) => {
    //Total de usurios de todos los meses del año
    if(req.params.month === 'all') {
       await User.aggregate([
@@ -104,4 +107,6 @@ exports.get_total_users = async(req, res) => {
          })
       }
    }
-}
+})
+
+module.exports = router

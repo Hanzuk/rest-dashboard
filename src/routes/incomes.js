@@ -1,3 +1,6 @@
+const express = require('express')
+const router = express.Router()
+
 const Income = require('../models/income')
 const moment = require('moment')
 
@@ -23,7 +26,7 @@ const apiResponse = (req, res, err, data) => {
    }
 }
 
-exports.get_total_incomes = async(req, res) => {
+router.get('/:year/:month', async(req, res) => {
    //Total de ingresos para cada mes del año
    if(req.params.month === 'all') {
       await Income.aggregate([
@@ -113,9 +116,8 @@ exports.get_total_incomes = async(req, res) => {
          })
       }
    }
-}
-
-exports.get_specific_income = async(req, res) => {
+})
+router.get('/:year/:month/:type', async(req, res) => {
    //Total de ingresos específico para cada mes del año
    //Types: 'accessories', 'subscription', 'supplements', 'session', 'sportswear' and 'others'
    if(req.params.month === 'all') {
@@ -212,4 +214,6 @@ exports.get_specific_income = async(req, res) => {
          })
       }
    }
-}
+})
+
+module.exports = router

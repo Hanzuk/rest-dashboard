@@ -10,8 +10,8 @@ class Datebase {
          process.env.URL_DB,
          { useNewUrlParser: true }
       )
-      .then(() => console.log('✔ Conexión exitosa al servidor local de MongoDB'))
-      .catch(err => { console.log(`❌ Error de conexion al servidor de MongoDB ${err.message}`) })
+      .then(() => console.log('✔ MongoDB Connected...'))
+      .catch(err => { console.log(`❌ MongoDB Connection Failed ${err.message}`) })
    }
 }
 

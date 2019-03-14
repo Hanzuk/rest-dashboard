@@ -3,15 +3,10 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 
-const config = require('./api/config')
-
-const usersRouter = require('./api/routes/usersRoute')
-const pollsRouter = require('./api/routes/pollsRouter')
-const incomesRouter = require('./api/routes/incomesRouters')
+const config = require('./src/config/config')
+const DB = require('./src/models/DB')
 
 app.use(morgan('dev'))
-
-app.set('port', process.env.PORT)
 
 app.use(express.json())
 
@@ -24,9 +19,9 @@ app.use((req, res, next) => {
 })
 
 //Routes
-app.use('/api/users', usersRouter)
-app.use('/api/polls', pollsRouter)
-app.use('/api/incomes', incomesRouter)
+app.use('/api/users', require('./src/routes/users'))
+app.use('/api/polls', require('./src/routes/polls'))
+app.use('/api/incomes', require('./src/routes/incomes'))
 
 //Manejo de errores
 app.use((req, res, next) => {
@@ -44,4 +39,4 @@ app.use((error, req, res, next) => {
    })
 })
 
-module.exports = app
+app.listen(process.env.PORT, () => console.log(`Server started on port ${process.env.PORT}`))
