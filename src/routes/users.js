@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const User = require('../models/User')
-const moment = require('moment')
+const UsersAgrs = require('../aggregations/_users')
 
 const apiResponse = (req, res, err, data) => {
    if(err) {
@@ -26,87 +26,22 @@ const apiResponse = (req, res, err, data) => {
    }
 }
 
-router.get('/:year/:month', async(req, res) => {
-   //Total de usurios de todos los meses del año
-   if(req.params.month === 'all') {
-      await User.aggregate([
-         {
-            '$match': {
-               'date_joined': {
-                  '$gte': new Date(moment.utc().set('year', req.params.year).startOf('year')),
-                  '$lte': new Date(moment.utc().set('year', req.params.year).endOf('year'))
-               }
-            }
-         }, {
-            '$group': {
-               '_id': {
-                  'year': { '$year': '$date_joined' },
-                  'month': { '$month': '$date_joined' }
-               }, 
-               'total': { '$sum': 1 }
-            }
-         }, {
-            '$project': {
-               '_id': 0, 
-               'date': {
-                  '$dateFromParts': {
-                     'year': '$_id.year', 
-                     'month': '$_id.month',
-                     'day': 10
-                  }
-               }, 
-               'total_users': '$total'
-            }
-         }, { '$sort': { 'date': 1 } }
-      ]).exec((err, data) => apiResponse(req, res, err, data))
-   } else {
-      //Total de usuarios de un mes específico
-      if(req.params.month >= 1 && req.params.month <= 12) {
-         await User.aggregate([
-            {
-               '$match': {
-                  'date_joined': {
-                     '$gte': new Date(
-                        moment.utc()
-                        .set('year', req.params.year)
-                        .set('month', req.params.month - 1)
-                        .startOf('month')
-                     ),
-                     '$lte': new Date(
-                        moment.utc()
-                        .set('year', req.params.year)
-                        .set('month', req.params.month - 1)
-                        .endOf('month')
-                     )
-                  }
-               }
-            }, {
-               '$group': {
-                  '_id': {
-                     'year': { '$year': '$date_joined' },
-                     'month': { '$month': '$date_joined' }
-                  }, 
-                  'total': { '$sum': 1 }
-               }
-            }, {
-               '$project': {
-                  '_id': 0, 
-                  'date': {
-                     '$dateFromParts': {
-                        'year': '$_id.year', 
-                        'month': '$_id.month'
-                     }
-                  }, 
-                  'total_users': '$total'
-               }
-            }
-         ]).exec((err, data) => apiResponse(req, res, err, data))
-      } else {
-         res.status(400).send({
-            error: 'Bad Request'
-         })
-      }
+router.get('/:year/:month', async (req, res) => {
+   if (req.params.month === 'all') {
+      return await User.aggregate(
+        UsersAgrs.total_year_users(parseInt(req.params.year))
+      ).exec((err, data) => apiResponse(req, res, err, data));
    }
+
+   if (parseInt(req.params.month) < 1 || parseInt(req.params.month) > 12) {
+      return res.status(400).send({
+         error: 'Bad Request'
+      })
+   }
+
+   await User.aggregate(
+      UsersAgrs.total_month_users(parseInt(req.params.year), parseInt(req.params.month))
+   ).exec((err, data) => apiResponse(req, res, err, data));
 })
 
 module.exports = router
