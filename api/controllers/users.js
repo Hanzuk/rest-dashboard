@@ -48,7 +48,8 @@ exports.get_total_users = async(req, res) => {
                'date': {
                   '$dateFromParts': {
                      'year': '$_id.year', 
-                     'month': '$_id.month'
+                     'month': '$_id.month',
+                     'day': 10
                   }
                }, 
                'total_users': '$total'
