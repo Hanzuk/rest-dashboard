@@ -1,10 +1,10 @@
 const moment = require('moment');
 
-exports.total_gen_income_year = year => {
+exports.annual_income = year => {
 	return [
 		{
 			$match: {
-				date: {
+				fecha: {
 					$gte: new Date(
 						moment
 							.utc()
@@ -23,36 +23,36 @@ exports.total_gen_income_year = year => {
 		{
 			$group: {
 				_id: {
-					year: { $year: '$date' },
-					month: { $month: '$date' }
+					year: { $year: '$fecha' },
+					month: { $month: '$fecha' }
 				},
-				total: { $sum: '$amount' }
+				monto: { $sum: '$monto' }
 			}
 		},
 		{
 			$project: {
 				_id: 0,
-				date: {
+				monto: 1,
+				fecha: {
 					$dateFromParts: {
 						year: '$_id.year',
 						month: '$_id.month',
 						day: 10
 					}
-				},
-				amount: '$total'
+				}
 			}
 		},
 		{
-			$sort: { date: 1 }
+			$sort: { fecha: 1 }
 		}
 	];
 };
 
-exports.total_gen_income_month = (year, month) => {
+exports.monthly_income = (year, month) => {
 	return [
 		{
 			$match: {
-				date: {
+				fecha: {
 					$gte: new Date(
 						moment
 							.utc()
@@ -73,23 +73,23 @@ exports.total_gen_income_month = (year, month) => {
 		{
 			$group: {
 				_id: {
-					year: { $year: '$date' },
-					month: { $month: '$date' }
+					year: { $year: '$fecha' },
+					month: { $month: '$fecha' }
 				},
-				total: { $sum: '$amount' }
+				monto: { $sum: '$monto' }
 			}
 		},
 		{
 			$project: {
 				_id: 0,
-				date: {
+				monto: 1,
+				fecha: {
 					$dateFromParts: {
 						year: '$_id.year',
 						month: '$_id.month',
 						day: 10
 					}
-				},
-				amount: '$total'
+				}
 			}
 		}
 	];

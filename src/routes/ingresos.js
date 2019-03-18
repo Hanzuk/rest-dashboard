@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const Income = require('../models/income');
-const IncomesAgrs = require('../aggregations/_incomes');
+const Ingreso = require('../models/Ingreso');
+const IngresoAggr = require('../aggregations/_ingresos');
 
 const apiResponse = (req, res, err, data) => {
 	if (err) {
@@ -28,8 +28,8 @@ const apiResponse = (req, res, err, data) => {
 
 router.get('/:year/:month', async (req, res) => {
 	if (req.params.month === 'all')
-		return await Income.aggregate(
-			IncomesAgrs.total_gen_income_year(parseInt(req.params.year))
+		return await Ingreso.aggregate(
+			IngresoAggr.annual_income(parseInt(req.params.year))
 		).exec((err, data) => apiResponse(req, res, err, data));
 
 	if (parseInt(req.params.month) < 1 || parseInt(req.params.month) > 12)
@@ -37,8 +37,8 @@ router.get('/:year/:month', async (req, res) => {
 			error: 'Bad Request'
 		});
 
-	await Income.aggregate(
-		IncomesAgrs.total_gen_income_month(
+	await Ingreso.aggregate(
+		IngresoAggr.monthly_income(
 			parseInt(req.params.year),
 			parseInt(req.params.month)
 		)
@@ -47,8 +47,8 @@ router.get('/:year/:month', async (req, res) => {
 
 router.get('/:year/:month/:type', async (req, res) => {
 	if (req.params.month === 'all')
-		return await Income.aggregate(
-			IncomesAgrs.total_spec_income_year(
+		return await Ingreso.aggregate(
+			IngresoAggr.total_spec_income_year(
 				parseInt(req.params.year),
 				req.params.type
 			)
@@ -60,13 +60,45 @@ router.get('/:year/:month/:type', async (req, res) => {
 		});
 
 	// Types: 'accessories', 'subscription', 'supplements', 'session', 'sportswear' and 'others'
-	await Income.aggregate(
-		IncomesAgrs.total_spec_income_month(
+	await Ingreso.aggregate(
+		IngresoAggr.total_spec_income_month(
 			parseInt(req.params.year),
 			parseInt(req.params.month),
 			req.params.type
 		)
 	).exec((err, data) => apiResponse(req, res, err, data));
+});
+
+router.post('/load', async (req, res) => {
+	// const ingreso = new Ingreso({
+	// 	ingreso_por: 'asd',
+	// 	monto: 99.99,
+	// 	fecha: new Date()
+	// });
+	// await ingreso.save();
+	// res.status(201).send(ingreso);
+	const randomDate = () => {
+		let startDate = new Date('2014-01-01').getTime();
+		let endDate = new Date().getTime();
+		let space = endDate - startDate;
+		let timestamp = Math.round(Math.random() * space);
+		timestamp += startDate;
+		return new Date(timestamp);
+	};
+	const randomNum = (min, max) => {
+		return Math.round(Math.random() * (max - min) + min);
+	};
+	let by = ['servicio1', 'servicio2', 'servicio3', 'suplemento', 'bebida'];
+	let docs = [];
+	for (let i = 0; i < 90000; i++) {
+		docs.push({
+			ingreso_por: by[randomNum(0, 4)],
+			monto: randomNum(15000, 75000),
+			fecha: randomDate()
+		});
+	}
+	await Ingreso.insertMany(docs);
+	res.status(201).send(docs);
 });
 
 module.exports = router;
