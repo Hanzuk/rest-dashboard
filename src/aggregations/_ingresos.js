@@ -32,8 +32,8 @@ exports.annual_income = year => {
 		{
 			$project: {
 				_id: 0,
-				monto: 1,
-				fecha: {
+				amount: '$monto',
+				date: {
 					$dateFromParts: {
 						year: '$_id.year',
 						month: '$_id.month',
@@ -43,7 +43,7 @@ exports.annual_income = year => {
 			}
 		},
 		{
-			$sort: { fecha: 1 }
+			$sort: { date: 1 }
 		}
 	];
 };
@@ -82,8 +82,8 @@ exports.monthly_income = (year, month) => {
 		{
 			$project: {
 				_id: 0,
-				monto: 1,
-				fecha: {
+				amount: '$monto',
+				date: {
 					$dateFromParts: {
 						year: '$_id.year',
 						month: '$_id.month',

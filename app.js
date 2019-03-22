@@ -24,8 +24,8 @@ app.use((req, res, next) => {
 });
 
 //Routes
-app.use('/api/ingresos', require('./src/routes/ingresos'));
-app.use('/api/gastos', require('./src/routes/gastos'));
+app.use('/api/income', require('./src/routes/ingresos'));
+app.use('/api/expenses', require('./src/routes/gastos'));
 
 //Manejo de errores
 app.use((req, res, next) => {
