@@ -4,8 +4,8 @@
 	"description": "A Node.js RESTful API Project For A Dashboard",
 	"main": "app.js",
 	"scripts": {
-		"dev": "nodemon app.js",
-		"build": "node app.js"
+		"start": "node app.js",
+		"dev": "nodemon app.js"
 	},
 	"repository": {
 		"type": "git",
