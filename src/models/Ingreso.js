@@ -1,10 +1,9 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 IngresoSchema = new Schema({
-	ingreso_por: String,
-	monto: Number,
-	fecha: Date
-});
+	amount: Number,
+	date: Date
+})
 
-module.exports = mongoose.model('Ingreso', IngresoSchema);
+module.exports = mongoose.model('Ingreso', IngresoSchema)
