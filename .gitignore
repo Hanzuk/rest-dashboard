@@ -62,4 +62,4 @@ typings/
 
 .vscode/
 
-/api/config.js
+/src/config.js
