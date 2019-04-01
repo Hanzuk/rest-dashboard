@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 class Datebase {
 	constructor() {
-		this.connect();
+		this.connect()
 	}
 
 	connect() {
 		mongoose
 			.connect(process.env.URL_DB, { useNewUrlParser: true })
-			.then(() => console.log('✔  MongoDB Connected...'))
+			.then(() => console.log('MongoDB Connected...'))
 			.catch(err => {
-				console.log(`❌  MongoDB Connection Failed ${err.message}`);
-			});
+				console.log(`MongoDB Connection Failed ${err.message}`)
+			})
 	}
 }
 
-module.exports = new Datebase();
+module.exports = new Datebase()
