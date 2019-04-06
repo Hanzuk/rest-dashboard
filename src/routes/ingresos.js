@@ -26,7 +26,7 @@ const apiResponse = (req, res, err, data) => {
 	}
 }
 
-router.get('/:year', async (req, res) => {
+router.get('/periodo/:year', async (req, res) => {
 	await Ingreso.find({
 		date: {
 			$gte: new Date(
@@ -47,7 +47,7 @@ router.get('/:year', async (req, res) => {
 	}).exec((err, data) => apiResponse(req, res, err, data))
 })
 
-router.get('/:year/:month', async (req, res) => {
+router.get('/periodo/:year/:month', async (req, res) => {
 	if (parseInt(req.params.month) < 1 || parseInt(req.params.month) > 12)
 		return res.status(400).send({
 			error: 'Bad Request'

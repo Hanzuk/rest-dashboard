@@ -48,7 +48,7 @@ const monthQuery = req => {
 	}
 }
 
-router.get('/:year', async (req, res) => {
+router.get('/periodo/:year', async (req, res) => {
 	const income = await Ingreso.find(yearQuery(req)).exec()
 	const expense = await Gasto.find(yearQuery(req)).exec()
 	let utility = []
@@ -61,7 +61,7 @@ router.get('/:year', async (req, res) => {
 	res.status(200).send(utility)
 })
 
-router.get('/:year/:month', async (req, res) => {
+router.get('/periodo/:year/:month', async (req, res) => {
 	if (parseInt(req.params.month) < 1 || parseInt(req.params.month) > 12)
 		return res.status(400).send({
 			error: 'Bad Request'

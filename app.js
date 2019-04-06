@@ -1,7 +1,8 @@
 const express = require('express')
-// const router = require('./router')
 const app = express()
 const morgan = require('morgan')
+const helmet = require('helmet')
+const cors = require('cors')
 
 const config = require('./src/config')
 const DB = require('./src/models/DB')
@@ -10,24 +11,21 @@ app.use(morgan('dev'))
 
 app.use(express.json())
 
+// Headers
+app.use(
+	helmet({
+		noCache: true
+	})
+)
+
 //CORS
-app.use((req, res, next) => {
-	req.header('Cache-Control', 'no-cache, no-store, must-revalidate')
-	res.header('Access-Control-Allow-Origin', '*')
-	res.header(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-	)
-	res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
-	res.header('Cache-Control', 'no-cache, no-store, must-revalidate')
-	next()
-})
+app.use(cors())
 
 //Routes
-app.use('/api/income', require('./src/routes/ingresos'))
-app.use('/api/expenses', require('./src/routes/gastos'))
-app.use('/api/customers', require('./src/routes/clientes'))
-app.use('/api/utility', require('./src/routes/utility'))
+app.use('/api/ingresos', require('./src/routes/ingresos'))
+app.use('/api/gastos', require('./src/routes/gastos'))
+app.use('/api/clientes', require('./src/routes/clientes'))
+app.use('/api/utilidad', require('./src/routes/utilidades'))
 
 //Manejo de errores
 app.use((req, res, next) => {

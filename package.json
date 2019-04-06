@@ -18,7 +18,9 @@
 	},
 	"homepage": "https://github.com/Hanzuk/rest-dashboard#readme",
 	"dependencies": {
+		"cors": "^2.8.5",
 		"express": "^4.16.4",
+		"helmet": "^3.16.0",
 		"moment": "^2.24.0",
 		"mongoose": "^5.4.19",
 		"morgan": "^1.9.1"
