@@ -76,6 +76,17 @@ router.get('/periodo/:year/:month', async (req, res) => {
 })
 
 router.get('/sede/:headquarter', async (req, res) => {
+	if (req.params.headquarter === 'all') {
+		return await Gasto.find({
+			headquarter: { $regex: '^sede', $options: 'im' }
+		}).exec((err, data) => apiResponse(req, res, err, data))
+	}
+
+	if (parseInt(req.params.headquarter) < 1)
+		return res.status(400).send({
+			error: 'Bad Request'
+		})
+
 	await Gasto.find({
 		headquarter: { $regex: `${req.params.headquarter}$`, $options: 'im' }
 	}).exec((err, data) => apiResponse(req, res, err, data))
