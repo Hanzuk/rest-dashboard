@@ -49,8 +49,8 @@ const monthQuery = req => {
 }
 
 router.get('/periodo/:year', async (req, res) => {
-	const income = await Ingreso.find(yearQuery(req)).exec()
-	const expense = await Gasto.find(yearQuery(req)).exec()
+	const income = await Ingreso.find(yearQuery(req)).sort({date: 1}).exec()
+	const expense = await Gasto.find(yearQuery(req)).sort({date: 1}).exec()
 	let utility = []
 	for (let i = 0; i < income.length; i++) {
 		utility.push({
@@ -67,8 +67,8 @@ router.get('/periodo/:year/:month', async (req, res) => {
 			error: 'Bad Request'
 		})
 
-	const income = await Ingreso.find(monthQuery(req)).exec()
-	const expense = await Gasto.find(monthQuery(req)).exec()
+	const income = await Ingreso.find(monthQuery(req)).sort({date: 1}).exec()
+	const expense = await Gasto.find(monthQuery(req)).sort({date: 1}).exec()
 	await res.status(200).send({
 		amount: income[0].amount + expense[0].amount,
 		date: income[0].date

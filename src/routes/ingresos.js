@@ -44,7 +44,7 @@ router.get('/periodo/:year', async (req, res) => {
 					.format()
 			)
 		}
-	}).exec((err, data) => apiResponse(req, res, err, data))
+	}).sort({date: 1}).exec((err, data) => apiResponse(req, res, err, data))
 })
 
 router.get('/periodo/:year/:month', async (req, res) => {
@@ -72,7 +72,7 @@ router.get('/periodo/:year/:month', async (req, res) => {
 					.format()
 			)
 		}
-	}).exec((err, data) => apiResponse(req, res, err, data))
+	}).sort({date: 1}).exec((err, data) => apiResponse(req, res, err, data))
 })
 
 module.exports = router
