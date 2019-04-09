@@ -79,7 +79,7 @@ router.get('/sede/:headquarter', async (req, res) => {
 	if (req.params.headquarter === 'all') {
 		return await Gasto.find({
 			headquarter: { $regex: '^sede', $options: 'im' }
-		}).exec((err, data) => apiResponse(req, res, err, data))
+		}).sort({headquarter: 1}).exec((err, data) => apiResponse(req, res, err, data))
 	}
 
 	if (parseInt(req.params.headquarter) < 1)
