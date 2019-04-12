@@ -3,34 +3,25 @@ const router = express.Router()
 
 const Cliente = require('../models/Cliente')
 
-const apiResponse = (req, res, err, data) => {
-	if (err) {
-		res.status(500).send({
-			error: `☠️ Internal Server Error ${err.message}`
-		})
+const response = (res, err, data) => {
+	if (err) return res.status(404).send({ error: 'Something Happened' })
+
+	if (data) {
+		res.status(200).send(data)
 	} else {
-		if (data) {
-			if (data.length > 0) {
-				res.status(200).send(data)
-			} else {
-				res.status(404).send({
-					error: '😭 Not found'
-				})
-			}
-		} else {
-			res.status(404).send({
-				error: '☠️ Not found'
-			})
-		}
+		res.status(404).send({ error: 'Something Happened' })
 	}
 }
 
 router.get('/sede/:headquarter', async (req, res) => {
 	if (req.params.headquarter === 'all') {
-		return await Cliente.find().exec((err, data) =>
-			apiResponse(req, res, err, data)
-		)
+		return await Cliente.find()
+			.sort({ headquarter: 1 })
+			.exec((err, data) => response(res, err, data))
 	}
+
+	if (req.params.headquarter.match(/[a-zA-Z]/g))
+		return res.status(404).send({ error: 'Invalid Param' })
 
 	if (parseInt(req.params.headquarter) < 1)
 		return res.status(400).send({
@@ -39,7 +30,7 @@ router.get('/sede/:headquarter', async (req, res) => {
 
 	await Cliente.find({
 		headquarter: { $regex: `${req.params.headquarter}$`, $options: 'im' }
-	}).exec((err, data) => apiResponse(req, res, err, data))
+	}).exec((err, data) => response(res, err, data))
 })
 
 module.exports = router
