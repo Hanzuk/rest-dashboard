@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const moment = require('moment')
 
-const Gasto = require('../models/Gasto')
+const GastoPeriodo = require('../models/Gastos_Periodo')
+const GastoSede = require('../models/Gastos_Sede')
 
 const response = (res, err, data) => {
 	if (err) return res.status(404).send({ error: 'Something Happened' })
@@ -20,7 +21,7 @@ router.get('/periodo/:year', async (req, res) => {
 	if (req.params.year.match(/[a-zA-Z]/g))
 		return res.status(404).send({ error: 'Invalid Param' })
 
-	await Gasto.find({
+	await GastoPeriodo.find({
 		date: {
 			$gte: new Date(
 				moment()
@@ -54,7 +55,7 @@ router.get('/periodo/:year/:month', async (req, res) => {
 			error: 'Something Happened'
 		})
 
-	await Gasto.find({
+	await GastoPeriodo.find({
 		date: {
 			$gte: new Date(
 				moment()
@@ -82,7 +83,7 @@ router.get('/sede/:headquarter', async (req, res) => {
 	let headquarter = parseInt(req.params.headquarter)
 
 	if (req.params.headquarter === 'all') {
-		return await Gasto.find({
+		return await GastoSede.find({
 			headquarter: { $regex: '^sede', $options: 'im' }
 		})
 			.sort({ headquarter: 1 })
@@ -97,7 +98,7 @@ router.get('/sede/:headquarter', async (req, res) => {
 			error: 'Something Happened'
 		})
 
-	await Gasto.find({
+	await GastoSede.find({
 		headquarter: { $regex: `${req.params.headquarter}$`, $options: 'im' }
 	}).exec((err, data) => response(res, err, data))
 })
