@@ -6,4 +6,4 @@ GastoSchema = new Schema({
 	date: Date
 })
 
-module.exports = mongoose.model('Gasto', GastoSchema)
+module.exports = mongoose.model('Gastos_Periodo', GastoSchema)
