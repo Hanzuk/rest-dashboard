@@ -63,7 +63,7 @@ router.get('/periodo/:year', async (req, res) => {
 	let utility = []
 	for (let i = 0; i < income.length; i++) {
 		utility.push({
-			amount: income[i].amount + expense[i].amount,
+			amount: income[i].amount - expense[i].amount,
 			date: income[i].date
 		})
 	}
@@ -88,7 +88,7 @@ router.get('/periodo/:year/:month', async (req, res) => {
 		.exec()
 
 	await res.status(200).send({
-		amount: income[0].amount + expense[0].amount,
+		amount: income[0].amount - expense[0].amount,
 		date: income[0].date
 	})
 })
