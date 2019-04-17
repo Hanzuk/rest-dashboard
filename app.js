@@ -23,6 +23,7 @@ app.use(
 app.use(cors())
 
 //Routes
+app.use('/', require('./src/routes/home'))
 app.use('/api/ingresos', require('./src/routes/ingresos'))
 app.use('/api/gastos', require('./src/routes/gastos'))
 app.use('/api/clientes', require('./src/routes/clientes'))
